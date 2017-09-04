@@ -2,7 +2,7 @@ from __future__ import (
     absolute_import, division, print_function, unicode_literals, with_statement,
 )
 
-import argparse, os, re, shlex, subprocess, sys
+import argparse, os, re, shlex, subprocess, sys, webbrowser
 
 from . import config, fmt, shell, util
 

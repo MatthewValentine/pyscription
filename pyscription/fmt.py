@@ -22,23 +22,24 @@ def suffix(suffix, *fmts):
     suffix = util.compose(*fmts)(suffix)
     return lambda text: text + suffix
 
-# From PEP 257
+# Almost from PEP 257; updated for Python 3 compatibility
 # https://www.python.org/dev/peps/pep-0257/
 def trim(docstring):
     if not docstring:
         return ''
     # Convert tabs to spaces (following the normal Python rules)
     # and split into a list of lines:
-    lines = docstring.expandtabs().splitlines()
+    lines = docstring.expandtabs(4).splitlines()
     # Determine minimum indentation (first line doesn't count):
-    indent = sys.maxint
+    indent = None
     for line in lines[1:]:
         stripped = line.lstrip()
         if stripped:
-            indent = min(indent, len(line) - len(stripped))
+            n_stripped = len(line) - len(stripped)
+            indent = min(indent, n_stripped) if indent is not None else n_stripped
     # Remove indentation (first line is special):
     trimmed = [lines[0].strip()]
-    if indent < sys.maxint:
+    if indent is not None:
         for line in lines[1:]:
             trimmed.append(line[indent:].rstrip())
     # Strip off trailing and leading blank lines:

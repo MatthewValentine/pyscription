@@ -16,17 +16,19 @@ else:
     from StringIO import StringIO
     input = raw_input
 
-function_type = type(lambda: None)
+try:
+    from types import SimpleNamespace as Namespace
+except ImportError:
+    class NamespaceMeta(type):
+        def __new__(meta, name, bases, dct):
+            return super(NamespaceMeta, meta).__new__(
+                meta, name, bases, {k: staticmethod(v) for k, v in dct.items()},
+            )
+        def __setattr__(cls, key, value):
+            super(NamespaceMeta, cls).__setattr__(key, staticmethod(value))
 
-class NamespaceMeta(type):
-    def __new__(meta, name, bases, dct):
-        return super(NamespaceMeta, meta).__new__(
-            meta, name, bases, {k: staticmethod(v) for k, v in dct.items()},
-        )
-    def __setattr__(cls, key, value):
-        super(NamespaceMeta, cls).__setattr__(key, staticmethod(value))
-
-Namespace = type.__new__(NamespaceMeta, 'Namespace', (object,), {})
+    class Namespace(object):
+        __metaclass__ = NamespaceMeta
 
 def identity(x): return x
 
@@ -53,8 +55,8 @@ def compose(*fns):
     return composed
 
 try:
-    list2cmdline = subprocess.list2cmdline
-except AttributeError:
+    from subprocess import list2cmdline
+except ImportError:
     def list2cmdline(seq):
         result = []
         needquote = False
