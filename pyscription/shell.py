@@ -14,7 +14,7 @@ def parse_command(cmd):
     else:
         return cmd
 
-def check_output(
+def output(
     cmd,
     include_stderr=False,
     display=False,
@@ -40,7 +40,7 @@ def check_output(
 
     return output
 
-def check_call(cmd, interactive=True, display=True, display_stderr=None, display_command=None):
+def call(cmd, interactive=True, display=True, display_stderr=None, display_command=None):
     interactive = util.default(interactive, display)
     display_stderr = util.default(display_stderr, display)
     display_command = util.default(display_command, display)
@@ -59,7 +59,7 @@ def check_call(cmd, interactive=True, display=True, display_stderr=None, display
             else config.streams.devnull,
     )
 
-def call(cmd, interactive=True, display=True, display_stderr=None, display_command=None):
+def unchecked_call(cmd, interactive=True, display=True, display_stderr=None, display_command=None):
     interactive = util.default(interactive, display)
     display_stderr = util.default(display_stderr, display)
     display_command = util.default(display_command, display)

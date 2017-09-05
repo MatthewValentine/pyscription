@@ -49,6 +49,7 @@ def prompt(*args, **kwargs):
         write(*args, style=config.styles.prompt, **kwargs)
         return util.input()
 
-def exit(message, code=1):
-    error(message)
+def exit(*args, code=1, **kwargs):
+    if args or kwargs:
+        error(*args, **kwargs)
     sys.exit(code)
