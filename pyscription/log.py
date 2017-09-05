@@ -2,6 +2,8 @@ from __future__ import (
     absolute_import, division, print_function, with_statement,
 )
 
+import sys
+
 from . import config, fmt, util
 
 class streams(util.Namespace):
@@ -27,22 +29,26 @@ def write(*args, **kwargs):
         stream.flush()
 
 def info(*args, **kwargs):
-    log.write(*args, style=config.styles.info, **kwargs)
+    write(*args, style=config.styles.info, **kwargs)
 
 def error(*args, **kwargs):
-    log.write(*args, style=config.styles.error, error=True, **kwargs)
+    write(*args, style=config.styles.error, error=True, **kwargs)
 
 def warn(*args, **kwargs):
-    log.write(*args, style=config.styles.warning, error=True, **kwargs)
+    write(*args, style=config.styles.warning, error=True, **kwargs)
 
 def shell_command(*args, **kwargs):
-    log.write(*args, style=config.styles.shell_command, trim=False, **kwargs)
+    write(*args, style=config.styles.shell_command, trim=False, **kwargs)
 
 def prompt(*args, **kwargs):
-        one_char = kwargs.pop('one_char', False)
-        if one_char:
-            log.write(*args, style=config.styles.one_char_prompt, **kwargs)
-            return util.getch()
-        else:
-            log.write(*args, style=config.styles.prompt, **kwargs)
-            return util.input()
+    one_char = kwargs.pop('one_char', False)
+    if one_char:
+        write(*args, style=config.styles.one_char_prompt, **kwargs)
+        return util.getch()
+    else:
+        write(*args, style=config.styles.prompt, **kwargs)
+        return util.input()
+
+def exit(message, code=1):
+    error(message)
+    sys.exit(code)
