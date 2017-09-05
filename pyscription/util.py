@@ -2,7 +2,7 @@ from __future__ import (
     absolute_import, division, print_function, with_statement,
 )
 
-import functools, inspect, os, subprocess, sys
+import argparse, functools, inspect, os, subprocess, sys
 
 PY3 = (sys.version_info >= (3,))
 PY2 = not PY3
@@ -15,6 +15,60 @@ else:
     string_types = (basestring,)
     from StringIO import StringIO
     input = raw_input
+
+def command(fn):
+    spec = inspect.getargspec(fn)
+
+    assert not spec.keywords, "**kwargs not supported"
+    assert not spec.varargs, "*args not supported"
+
+    args, defaults = spec.args, spec.defaults
+    n_without_defaults = len(args) - len(defaults)
+    without_defaults, with_defaults = args[:n_without_defaults], args[n_without_defaults:]
+
+    parser = argparse.ArgumentParser(description=inspect.getdoc(fn))
+
+    used_short = {'h'}
+    def shorten(arg):
+        for char in [arg[0], arg[0].lower(), arg[0].upper()]:
+            if char not in used_short:
+                used_short.add(char)
+                return char
+        return None
+
+    for arg in without_defaults:
+        parser.add_argument(arg)
+
+    for (arg, default) in zip(with_defaults, defaults):
+        variants = ['--{}'.format(arg)]
+        short = shorten(arg)
+        if short is not None:
+            variants.append('-{}'.format(short))
+
+        if isinstance(default, bool):
+            no_variant = '--no-{}'.format(arg)
+            help_message = '(default yes)' if default else '(default no)'
+
+            group = parser.add_mutually_exclusive_group()
+            group.add_argument(
+                *variants, dest=arg, action='store_const', const=True,
+                help=help_message
+            )
+            group.add_argument(
+                no_variant, dest=arg, action='store_const', const=False
+            )
+        else:
+            parser.add_argument(
+                *variants, default=default,
+                help='Defaults to {!r}'.format(default)
+            )
+
+    @functools.wraps(fn)
+    def wrapper(argv=None):
+        parsed_args = parser.parse_args(argv) if argv is not None else parser.parse_args()
+        return fn(**vars(parsed_args))
+
+    return wrapper
 
 try:
     from types import SimpleNamespace as Namespace
