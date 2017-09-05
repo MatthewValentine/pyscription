@@ -2,7 +2,7 @@ from __future__ import (
     absolute_import, division, print_function, with_statement,
 )
 
-import sys
+import os, sys
 
 from . import config, fmt, util
 
@@ -42,14 +42,25 @@ def shell_command(*args, **kwargs):
 
 def prompt(*args, **kwargs):
     one_char = kwargs.pop('one_char', False)
-    if one_char:
-        write(*args, style=config.styles.one_char_prompt, **kwargs)
-        return util.getch()
-    else:
-        write(*args, style=config.styles.prompt, **kwargs)
-        return util.input()
+    valid = kwargs.pop('valid', lambda response: True)
 
-def exit(*args, code=1, **kwargs):
+    while True:
+        if one_char:
+            write(*args, style=config.styles.one_char_prompt, **kwargs)
+            response = util.getch()
+        else:
+            write(*args, style=config.styles.prompt, **kwargs)
+            response = util.input()
+
+        if valid(response):
+            break
+        else:
+            error('{!r} is not a valid response.'.format(response))
+
+    return response
+
+def exit(*args, **kwargs):
+    code = kwargs.pop('code', 1)
     if args or kwargs:
         error(*args, **kwargs)
     sys.exit(code)

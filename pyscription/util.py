@@ -13,7 +13,7 @@ if PY3:
     input = input
 else:
     string_types = (basestring,)
-    from StringIO import StringIO
+    from cStringIO import StringIO
     input = raw_input
 
 def command(fn):
@@ -151,13 +151,14 @@ except ImportError:
 
         return ''.join(result)
 
-# From StackOverflow user jfs
+# Modified from StackOverflow user jfs
 # https://stackoverflow.com/questions/3718657/how-to-properly-determine-current-script-directory-in-python/22881871#22881871
 def get_script_dir(follow_symlinks=True):
     if getattr(sys, 'frozen', False): # py2exe, PyInstaller, cx_Freeze
         path = os.path.abspath(sys.executable)
     else:
-        path = inspect.getabsfile(get_script_dir)
+        #path = inspect.getabsfile(get_script_dir)
+        path = os.path.abspath(sys.argv[0])
     if follow_symlinks:
         path = os.path.realpath(path)
     return os.path.dirname(path)
