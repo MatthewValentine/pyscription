@@ -40,4 +40,7 @@ class styles(util.Namespace):
         fmt.suffix('>>> ', fmt.cyan),
         fmt.cyan,
     )
-    one_char_prompt = prompt
+    one_char_prompt = util.compose(
+        fmt.prefix('  Prompt  \n', fmt.fill, fmt.cyan),
+        fmt.cyan,
+    )

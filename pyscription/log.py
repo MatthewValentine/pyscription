@@ -13,7 +13,7 @@ class streams(util.Namespace):
     devnull = open(os.devnull, 'r+b')
 
 def simple(*args, **kwargs):
-    print(*args, **kwargs)
+    print(*args, file=streams.stdout, **kwargs)
 
 def write(*args, **kwargs):
     style = kwargs.pop('style', fmt.none)
@@ -48,6 +48,7 @@ def prompt(*args, **kwargs):
         if one_char:
             write(*args, style=config.styles.one_char_prompt, **kwargs)
             response = util.getch()
+            simple()
         else:
             write(*args, style=config.styles.prompt, **kwargs)
             response = util.input()

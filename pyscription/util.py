@@ -13,8 +13,12 @@ if PY3:
     input = input
 else:
     string_types = (basestring,)
-    from cStringIO import StringIO
+    from StringIO import StringIO
     input = raw_input
+
+def cd_to_script_directory():
+    from . import config
+    os.chdir(config.paths.script_dir)
 
 def command(fn):
     spec = inspect.getargspec(fn)
@@ -23,6 +27,10 @@ def command(fn):
     assert not spec.varargs, "*args not supported"
 
     args, defaults = spec.args, spec.defaults
+    if not args:
+        args = []
+    if not defaults:
+        defaults = []
     n_without_defaults = len(args) - len(defaults)
     without_defaults, with_defaults = args[:n_without_defaults], args[n_without_defaults:]
 
