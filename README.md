@@ -83,7 +83,7 @@ subprocess.check_call(['rm', '-rf', '/'], stdout=devnull, stderr=devnull)
 
 ### Formatted logging and prompting
 
-Some nice default styles. (subjective)
+Some nice default styles (subjective.)
 Easily customizable, since it's just Python.
 Comes with a bunch of the terminal color & style escape codes.
 
