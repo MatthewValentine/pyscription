@@ -63,6 +63,13 @@ util.print_to_string(1, 'squid', sep='&', end='nugget')
 # '1&squidnugget'
 ```
 
+Compose some functions, if you'd like
+
+```python
+util.compose(lambda x: x*6, lambda x: x+1)(5)
+# 36
+```
+
 ### Thin shell command wrappers
 
 Very slightly more convenient than `subprocess`, but still safe (not using `shell=True`.)
