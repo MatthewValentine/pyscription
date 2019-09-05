@@ -1,6 +1,6 @@
 # pyscription
 
-Utilities to make replacing shell scripts with Python as easy as it should be.
+Utilities to make Python commandline scripts as easy as they should be.
 Python 2/3 compatible, no dependencies outside standard lib.
 
 ## Survey
