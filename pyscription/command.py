@@ -55,6 +55,7 @@ def alias(*aliases):
     def add_aliases(cmd):
         existing = getattr(cmd, '__alias__', ())
         cmd.__alias__ = tuple(existing) + aliases
+        return cmd
     return add_aliases
 
 def command(fn):
