@@ -134,7 +134,6 @@ def command(fn):
             for arg in kwonly:
                 keyword[arg] = getattr(parsed_args, arg)
 
-            print(positional, keyword)
             fn(*positional, **keyword)
 
         if superparser is None:
