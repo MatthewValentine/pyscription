@@ -6,6 +6,9 @@ import argparse, functools, inspect
 
 _command_counter = 0
 
+def run(main):
+    main()
+
 class Command(object):
     def __init__(self, superparser=None, used_short=None):
         global _command_counter

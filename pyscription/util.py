@@ -16,9 +16,7 @@ else:
     from StringIO import StringIO
     input = raw_input
 
-def cd_to_script_directory():
-    from . import config
-    os.chdir(config.paths.script_dir)
+def run()
 
 try:
     from types import SimpleNamespace as Namespace

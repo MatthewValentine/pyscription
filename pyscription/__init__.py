@@ -12,4 +12,4 @@ __all__ = [
     'util',
 ]
 
-from .command import command, Command
+from .command import Command, command, run

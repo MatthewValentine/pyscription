@@ -1,6 +1,6 @@
 # pyscription
 
-Utilities to make Python commandline scripts as easy as they should be.
+Make Python commandline scripts as easy as they should be.
 Python 2/3 compatible, no dependencies outside standard lib.
 
 ## Survey
@@ -12,15 +12,13 @@ A list of some of the more useful features.
 One line to generate basic command line interfaces from Python functions.
 
 ```python
+@run
 @command
 def main(x, y, zebra='something', monkey=True, rabbit=False):
     '''
     A docstring am I
     '''
     pass
-
-if __name__ == '__main__':
-    main()
 ```
 
 ```shell
@@ -43,16 +41,17 @@ optional arguments:
   --no-rabbit
 ```
 
-Or easily make subcommands (like how `git fetch`, `git push`, etc. works.)
+Even subcommands are easy (like `git fetch`, `git push`, etc.)
 
 ```python
+@run
 class git(Command):
     @command
     def add(*files):
         ...
 
     @command
-    def fetch(remote=None):
+    def pull(remote='origin/master'):
         ...
 
     class turtles(Command):
@@ -62,30 +61,9 @@ class git(Command):
                 ...
 ```
 
-### Simple but handy utils
-
-Set the working directory to be where your script lives.
-
-```python
-util.cd_to_script_directory()
-```
-
-Read a single character off input without waiting for enter.
-
-```python
-util.getch()
-```
-
-Get Python `print` output as a string.
-
-```python
-util.print_to_string(1, 'squid', sep='&', end='nugget')
-# '1&squidnugget'
-```
-
 ### Thin shell command wrappers
 
-Very slightly more convenient than `subprocess`, but still safe (not using `shell=True`.)
+Slightly more convenient than `subprocess`, but still safe (not using `shell=True`.)
 
 ```python
 shell.call('rm -rf /', display=False)
@@ -94,11 +72,22 @@ devnull = open(os.devnull, 'r+b')
 subprocess.check_call(['rm', '-rf', '/'], stdout=devnull, stderr=devnull)
 ```
 
+Some little conveniences, like setting the working directory to be where your script lives.
+
+```python
+shell.cd_to_script_directory()
+```
+
 ### Formatted logging and prompting
 
-Some nice default styles (subjective.)
-Easily customizable, since it's just Python.
-Comes with a bunch of the terminal color & style escape codes.
+Basic output and interactive prompts.
+
+```python
+log.error('Something went terribly wrong!')
+log.prompt('Continue? [y/n]', one_char=True)
+```
+
+Easily customize logging format. As complex as you like - not templates, just Python!
 
 ```python
 def boxed(s):
@@ -174,5 +163,3 @@ a number 1 and a var x = 2
 # 2
 # 5
 ```
-
-More functionality is of course available.

@@ -6,7 +6,12 @@ import os, shlex, subprocess, sys
 
 from . import log, util
 
-DEVNULL = open(os.devnull, 'r+b')
+def cd(directory):
+    os.chdir(directory)
+
+def cd_to_script_directory():
+    from . import config
+    os.chdir(config.paths.script_dir)
 
 def parse_command(cmd):
     if isinstance(cmd, util.string_types):
