@@ -42,7 +42,10 @@ class Command(object):
                 continue
             val = getattr(self, attr)
             if val:
-                self._handlers[attr] = val(subparser, used_short)
+                handler = val(subparser, used_short)
+                self._handlers[attr] = handler
+                for alias in getattr(val, '__alias__', ()):
+                    self._handlers[alias] = handler
 
         if superparser is None:
             self(parser.parse_args())
