@@ -75,7 +75,7 @@ def command(fn):
 
     @functools.wraps(fn)
     def wrapper(self=None, superparser=None, used_short=None):
-        aliases = getattr(wrapper, '__alias__', None)
+        aliases = getattr(wrapper, '__alias__', ())
         if superparser is not None:
             if PY3:
                 parser = superparser.add_parser(name, description=desc, aliases=aliases)
