@@ -83,7 +83,7 @@ shell.cd_to_script_directory()
 Basic output and interactive prompts.
 
 ```python
-log.error('Something went terribly wrong!')
+log.error('Something went terribly wrong', 6, 'times !')
 log.prompt('Continue? [y/n]', one_char=True)
 ```
 

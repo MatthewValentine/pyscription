@@ -16,8 +16,6 @@ else:
     from StringIO import StringIO
     input = raw_input
 
-def run()
-
 try:
     from types import SimpleNamespace as Namespace
 except ImportError:
