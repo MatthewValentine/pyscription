@@ -52,11 +52,10 @@ class Command(object):
         self._handlers[subcommand](parsed_args)
 
 def alias(*aliases):
-    def make_command(fn):
-        cmd = command(fn)
-        cmd.__alias__ = aliases
-        return cmd
-    return make_command
+    def add_aliases(cmd):
+        existing = getattr(cmd, '__alias__', ())
+        cmd.__alias__ = tuple(existing) + aliases
+    return add_aliases
 
 def command(fn):
     if PY3:
@@ -73,10 +72,10 @@ def command(fn):
 
     name = fn.__name__
     desc = inspect.getdoc(fn)
-    aliases = getattr(self, '__alias__', None)
 
     @functools.wraps(fn)
     def wrapper(self=None, superparser=None, used_short=None):
+        aliases = getattr(wrapper, '__alias__', None)
         if superparser is not None:
             if PY3:
                 parser = superparser.add_parser(name, description=desc, aliases=aliases)
