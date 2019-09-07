@@ -7,7 +7,7 @@ import os, shlex, subprocess, sys
 from . import config, log, util
 
 def cd(directory=None):
-    os.chdir(directory if directory is not None else config.paths.home)
+    os.chdir(os.path.expanduser(directory) if directory is not None else config.paths.home)
 
 def cd_to_script_directory():
     os.chdir(config.paths.script_dir)
