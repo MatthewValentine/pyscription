@@ -4,13 +4,12 @@ from __future__ import (
 
 import os, shlex, subprocess, sys
 
-from . import log, util
+from . import config, log, util
 
-def cd(directory):
-    os.chdir(directory)
+def cd(directory=None):
+    os.chdir(directory if directory is not None else config.paths.home)
 
 def cd_to_script_directory():
-    from . import config
     os.chdir(config.paths.script_dir)
 
 def parse_command(cmd):

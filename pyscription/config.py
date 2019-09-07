@@ -13,8 +13,8 @@ class Personalize(object):
             getattr(self, user)()
 
 class paths(util.Namespace):
-    home_dir = os.path.expanduser('~')
-    username = os.path.basename(home_dir)
+    home = os.path.expanduser('~')
+    username = os.path.basename(home)
     script_dir = util.get_script_dir()
     original_working_dir = os.getcwd()
 
