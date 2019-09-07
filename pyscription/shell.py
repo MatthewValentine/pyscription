@@ -38,7 +38,7 @@ def output(
         stderr=subprocess.STDOUT if include_stderr
             else log.streams.stderr if display_stderr
             else log.streams.devnull,
-        env=dict(os.environ, **env) if env else None,
+        env=dict(os.environ, **{k: str(v) for k, v in env.items()}) if env else None,
     )
 
     if display:
@@ -63,7 +63,7 @@ def call(cmd, interactive=True, display=True, display_stderr=None, display_comma
             else log.streams.devnull,
         stderr=log.streams.stderr if display_stderr
             else log.streams.devnull,
-        env=dict(os.environ, **env) if env else None,
+        env=dict(os.environ, **{k: str(v) for k, v in env.items()}) if env else None,
     )
 
 def unchecked_call(cmd, interactive=True, display=True, display_stderr=None, display_command=None, env=None):
@@ -83,5 +83,5 @@ def unchecked_call(cmd, interactive=True, display=True, display_stderr=None, dis
             else log.streams.devnull,
         stderr=log.streams.stderr if display_stderr
             else log.streams.devnull,
-        env=dict(os.environ, **env) if env else None,
+        env=dict(os.environ, **{k: str(v) for k, v in env.items()}) if env else None,
     )
