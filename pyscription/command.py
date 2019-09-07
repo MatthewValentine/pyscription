@@ -4,6 +4,8 @@ from __future__ import (
 
 import argparse, functools, inspect
 
+from .util import PY3
+
 _command_counter = 0
 
 def run(main):
@@ -16,8 +18,12 @@ class Command(object):
 
         name = self.__class__.__name__
         desc = inspect.getdoc(self)
+        aliases = getattr(self, '__alias__', None)
         if superparser is not None:
-            parser = superparser.add_parser(name, description=desc)
+            if PY3:
+                parser = superparser.add_parser(name, description=desc, aliases=aliases)
+            else:
+                parser = superparser.add_parser(name, description=desc)
         else:
             parser = argparse.ArgumentParser(description=desc)
             used_short = {'h'}
@@ -34,8 +40,9 @@ class Command(object):
         for attr in sorted(dir(self)):
             if attr.startswith('_'):
                 continue
-
-            self._handlers[attr] = getattr(self, attr)(subparser, used_short)
+            val = getattr(self, attr)
+            if val:
+                self._handlers[attr] = val(subparser, used_short)
 
         if superparser is None:
             self(parser.parse_args())
@@ -44,11 +51,18 @@ class Command(object):
         subcommand = getattr(parsed_args, self._key)
         self._handlers[subcommand](parsed_args)
 
+def alias(*aliases):
+    def make_command(fn):
+        cmd = command(fn)
+        cmd.__alias__ = aliases
+        return cmd
+    return make_command
+
 def command(fn):
-    try:
+    if PY3:
         spec = inspect.getfullargspec(fn)
         kwonly, kwdefault = spec.kwonlyargs or [], spec.kwonlydefaults or {}
-    except AttributeError:
+    else:
         spec = inspect.getargspec(fn)
         kwonly, kwdefault = [], {}
 
@@ -59,11 +73,15 @@ def command(fn):
 
     name = fn.__name__
     desc = inspect.getdoc(fn)
+    aliases = getattr(self, '__alias__', None)
 
     @functools.wraps(fn)
     def wrapper(self=None, superparser=None, used_short=None):
         if superparser is not None:
-            parser = superparser.add_parser(name, description=desc)
+            if PY3:
+                parser = superparser.add_parser(name, description=desc, aliases=aliases)
+            else:
+                parser = superparser.add_parser(name, description=desc)
         else:
             parser = argparse.ArgumentParser(description=desc)
             used_short = {'h'}
