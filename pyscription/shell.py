@@ -24,6 +24,7 @@ def output(
     display=False,
     display_stderr=None,
     display_command=None,
+    env=None,
 ):
     display_stderr = util.default(display_stderr, display)
     display_command = util.default(display_command, display)
@@ -37,6 +38,7 @@ def output(
         stderr=subprocess.STDOUT if include_stderr
             else log.streams.stderr if display_stderr
             else log.streams.devnull,
+        env=dict(os.environ, **env) if env else None,
     )
 
     if display:
@@ -44,7 +46,7 @@ def output(
 
     return output
 
-def call(cmd, interactive=True, display=True, display_stderr=None, display_command=None):
+def call(cmd, interactive=True, display=True, display_stderr=None, display_command=None, env=None):
     interactive = util.default(interactive, display)
     display_stderr = util.default(display_stderr, display)
     display_command = util.default(display_command, display)
@@ -61,9 +63,10 @@ def call(cmd, interactive=True, display=True, display_stderr=None, display_comma
             else log.streams.devnull,
         stderr=log.streams.stderr if display_stderr
             else log.streams.devnull,
+        env=dict(os.environ, **env) if env else None,
     )
 
-def unchecked_call(cmd, interactive=True, display=True, display_stderr=None, display_command=None):
+def unchecked_call(cmd, interactive=True, display=True, display_stderr=None, display_command=None, env=None):
     interactive = util.default(interactive, display)
     display_stderr = util.default(display_stderr, display)
     display_command = util.default(display_command, display)
@@ -80,4 +83,5 @@ def unchecked_call(cmd, interactive=True, display=True, display_stderr=None, dis
             else log.streams.devnull,
         stderr=log.streams.stderr if display_stderr
             else log.streams.devnull,
+        env=dict(os.environ, **env) if env else None,
     )
