@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="pyscription-matthew-valentine",
+    name="pyscription",
     version="0.0.1",
     author="Matthew Valentine",
     author_email="matthew.aaron.valentine@gmail.com",

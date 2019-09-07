@@ -5,26 +5,27 @@ Python 2/3 compatible, no dependencies outside standard lib.
 
 ## Survey
 
-A non-exhaustive list of some of the more useful features
+A list of some of the more useful features.
 
 ### Easy command line arguments
 
-One line to generate basic command line interfaces from Python functions. Nothing super fancy, just easy.
+One line to generate basic command line interfaces from Python functions.
 
 ```python
-@util.command
+@command
 def main(x, y, zebra='something', monkey=True, rabbit=False):
     '''
     A docstring am I
     '''
     pass
+
+if __name__ == '__main__':
+    main()
 ```
 
 ```shell
 $ ./my_script.py -h
-usage: my_script.py [-h] [--zebra ZEBRA] [--monkey | --no-monkey]
-                    [--rabbit | --no-rabbit]
-                    x y
+usage: my_script.py [-h] [-z ZEBRA] [-m | --no-monkey] [-r | --no-rabbit] x y
 
 A docstring am I
 
@@ -34,40 +35,52 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  --zebra ZEBRA, -z ZEBRA
-                        Defaults to 'something'
-  --monkey, -m          (default yes)
+  -z ZEBRA, --zebra ZEBRA
+                        default: 'something'
+  -m, --monkey          default: yes
   --no-monkey
-  --rabbit, -r          (default no)
+  -r, --rabbit          default: no
   --no-rabbit
+```
+
+Or easily make subcommands (like how `git fetch`, `git push`, etc. works.)
+
+```python
+class git(Command):
+    @command
+    def add(*files):
+        ...
+
+    @command
+    def fetch(remote=None):
+        ...
+
+    class turtles(Command):
+        class all(Command):
+            @command
+            def the(way='down'):
+                ...
 ```
 
 ### Simple but handy utils
 
-Set the working directory to be where your script lives
+Set the working directory to be where your script lives.
 
 ```python
 util.cd_to_script_directory()
 ```
 
-Read a single character off input without waiting for enter
+Read a single character off input without waiting for enter.
 
 ```python
 util.getch()
 ```
 
-Get Python `print` output as a string
+Get Python `print` output as a string.
 
 ```python
 util.print_to_string(1, 'squid', sep='&', end='nugget')
 # '1&squidnugget'
-```
-
-Compose some functions, if you'd like
-
-```python
-util.compose(lambda x: x*6, lambda x: x+1)(5)
-# 36
 ```
 
 ### Thin shell command wrappers
