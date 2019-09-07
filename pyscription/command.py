@@ -57,9 +57,14 @@ class Command(object):
 def alias(*aliases):
     def add_aliases(cmd):
         existing = getattr(cmd, '__alias__', ())
-        cmd.__alias__ = tuple(existing) + aliases
+        cmd.__alias__ = tuple(existing) + tuple(a for alias in aliases for a in alias.split() if a)
         return cmd
     return add_aliases
+
+def command_alias(*aliases):
+    def aliased_command(fn):
+        return alias(*aliases)(command(fn))
+    return aliased_command
 
 def command(fn):
     if PY3:
