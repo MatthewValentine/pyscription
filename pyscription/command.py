@@ -3,8 +3,11 @@ from __future__ import (
 )
 
 import argparse, functools, inspect
+from collections import ChainMap
 
 from .util import PY3
+
+_default_used_short = {'h': True}
 
 _command_counter = 0
 
@@ -26,7 +29,8 @@ class Command(object):
                 parser = superparser.add_parser(name, description=desc)
         else:
             parser = argparse.ArgumentParser(description=desc)
-            used_short = {'h'}
+
+        used_short = ChainMap({}, used_short or _default_used_short)
 
         self._key = '__subcommand_' + str(_command_counter)
         subparser = parser.add_subparsers(dest=self._key)
@@ -92,7 +96,8 @@ def command(fn):
                 parser = superparser.add_parser(name, description=desc)
         else:
             parser = argparse.ArgumentParser(description=desc)
-            used_short = {'h'}
+
+        used_short = ChainMap({}, used_short or _default_used_short)
 
         def shorten(arg):
             for char in (arg[0].lower(), arg[0].upper()):
