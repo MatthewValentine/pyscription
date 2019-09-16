@@ -102,7 +102,7 @@ def command(fn):
         def shorten(arg):
             for char in (arg[0].lower(), arg[0].upper()):
                 if char not in used_short:
-                    used_short.add(char)
+                    used_short[char] = True
                     return char
             return None
 
